@@ -1,0 +1,293 @@
+<!---front end infrastructure, form based. Current show readout.-->
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <style>
+    body{
+        margin: 0px;
+        padding: 0px;
+        border:0px;
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #323232;
+        color:#CBCBCB;
+    }
+
+    hr{
+        border: 0;
+        height: 1px;
+        background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(126, 126, 126, 0.75), rgba(0, 0, 0, 0));
+    }
+
+    h1{
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        position: relative;
+        width: 600px;
+        margin-top: 20px;
+        text-align: center;
+    }
+    
+    #currentList{
+        width:600px;
+        /*background-color:aquamarine;*/
+        display:block;
+        position: relative;
+        padding:10px;
+    }
+
+    #newEntryBox{
+        width:600px;
+        /*background-color: cadetblue;*/
+        display:block;
+        position: relative;
+        padding-top:10px;
+        padding-bottom: 10px;
+    }
+
+    #newEntryBox p{
+        margin-top: 40px;
+        margin-left: 20px;
+        font-size: 20px;
+        vertical-align:middle;
+        font-size: 20px;
+    }
+
+    #currentList p{
+        padding:10px;
+    }
+
+    .left{
+        float: left;
+    }
+
+    .right{
+        float: right;
+    }
+
+    .hover:hover{
+        background-color:#222222;
+        border-radius: 3px;
+    }
+
+    #container{
+        display:block;
+        width:600px;
+        margin-left: auto;
+        margin-right: auto;
+        position:relative;
+        /*background-color:darkolivegreen;*/
+    }
+
+    .inputStyle {
+    display: inline-block;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    padding: 10px 20px;
+    border: 1px solid #434343;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    font: normal 20px/normal Arial Black, Gadget, sans-serif;
+    color: #E96944;
+    -o-text-overflow: clip;
+    text-overflow: clip;
+    background: #222;
+    -webkit-box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2) inset;
+    box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2) inset;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.66) ;
+    -webkit-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+    -moz-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+    -o-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+    transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+    margin-top:-12px;
+    width:500px;
+    }
+
+    .inputStyle:focus{
+        border: 1px solid #E96944;
+        outline: 0;
+    }
+
+    .buttonStyle {
+    display: inline-block;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    cursor: pointer;
+    padding: 10px 20px;
+    border: 1px solid #E96944;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    font: normal 22px/normal Arial Black, Gadget, sans-serif;
+    color: #E96944;
+    -o-text-overflow: clip;
+    text-overflow: clip;
+    background: #323232;
+    -webkit-box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2) ;
+    box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2) ;
+    text-shadow: -1px -1px 0 rgba(104, 47, 31, 0.664) ;
+    -webkit-transition: all 300ms cubic-bezier(0.42, 0, 0.58, 1);
+    -moz-transition: all 300ms cubic-bezier(0.42, 0, 0.58, 1);
+    -o-transition: all 300ms cubic-bezier(0.42, 0, 0.58, 1);
+    transition: all 300ms cubic-bezier(0.42, 0, 0.58, 1);
+    }
+
+    .buttonStyle:focus{
+        outline: 0;
+        border:1px solid #cbcbcb;
+    }
+
+    .deleteButton {
+        color:red;
+        float:right;
+        cursor: pointer;
+    }
+
+    .small{
+        font-size: 12px;
+    }
+
+    #successCode{
+        background-color:#2D5239;
+        padding:5px;
+        padding-bottom:10px;
+        margin-bottom: 5px;
+        vertical-align: baseline;
+        margin-left: 20px;
+        border-radius: 3px;
+    }
+
+    #successCode p {
+        margin-top:28px;
+    }
+
+    #logo{
+        width:600px;
+    }
+
+    </style>
+</head>
+
+<body>
+
+<div id = container>
+        <img src="logonadl.png" id="logo"/>
+
+        
+        <div id="currentList" ><p>Shows go here.</p> </div>
+
+        
+
+        <div id="newEntryBox"> 
+            <div id="successCode"><p>Stuff went wrong!</p></div>
+            <i class="small">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * indicated you can use a wildcard in this field. + indicates a field is case insensitive.</i>
+            <p>+
+                <input type="text" id="sName" class="right inputStyle" value="Show Name" onfocus="this.value=''"/>
+            </p>
+
+            <p>*
+                <input type = "text" id="tName" class="right inputStyle" value="Poster Tag" onfocus="this.value=''"/>
+                
+            </p>
+
+            <p>*
+                <input list="quality" id="sQuality" class="right inputStyle" onfocus="this.value=''" value="Show Quality"/>
+                
+                <datalist id="quality">
+                    <option value="*"/>
+                    <option value="480"/>
+                    <option value="720"/>
+                    <option value="1080"/>
+                </datalist>
+            </p>
+
+            <p>* +
+                <input type="text" id="keyword" class="right inputStyle" onfocus="this.value=''" value="Extra Keyword ( ͡° ͜ʖ ͡°)"/>
+                
+            </p>
+
+            <p>
+                <button onclick="getServerData()" class="buttonStyle">Refresh</button>
+                <button onclick="sendShowData()" class="right buttonStyle">Submit</button>
+            </p>
+        </div>
+</div>
+
+
+<script>
+var timerOne;
+
+$( document ).ready(function() {
+  getServerData();
+  $('#successCode').hide();
+});
+
+function getServerData() {
+   $.get('/data', {}, function(data){
+        console.log(data);
+        $('#currentList').empty();
+        var l = data.split('\n');
+        for(var i = 0; i < l.length; i++){
+            $("#currentList").append("<p class='"+i+" hover'>" + l[i] + "<span class='deleteButton' onclick='deleteShow("+i+")'>X</span></p>");
+        }
+   });
+}
+
+function deleteShow(showNumber) {
+    console.log("Deleting: " + showNumber);
+    $.ajax({
+        url: '/del',
+        cache: false,
+        type: 'POST',
+        dataType: 'json',
+        data: {line: showNumber}
+    })
+        .done(function(msg){
+            console.log("entry deleted");
+            $('#successCode').show('fast');
+            $('#successCode').html("<p>Entry Deleted!</p>");
+            timerOne = setTimeout(hideMessage,2000);
+            getServerData();
+        });
+}
+
+function sendShowData() {
+    //send form data to server
+    var sName = $('#sName').val();
+    var tName = $('#tName').val();
+    var sQuality = $('#sQuality').val();
+    var kName = $('#keyword').val();
+
+    if(sName != "" && tName != "" && sQuality != "" && kName != ""){
+        $.ajax({
+            url: '/send',
+            cache: false,
+            type: 'POST',
+            dataType: 'json',
+            data: {name: sName, tag:tName, qual:sQuality, key:kName}
+        })
+        .done(function(msg){
+            console.log("entry added");
+            $('#sName').val('Show Name');
+            $('#tName').val('Poster Tag');
+            $('#sQuality').val('Show Quality');
+            $('#keyword').val('Extra Keyword');
+            $('#successCode').show('fast');
+            $('#successCode').html("<p>Entry Added!</p>");
+            timerOne = setTimeout(hideMessage,2000);
+            getServerData();
+        });
+    }
+    else
+    {
+        alert("Not all fields are filled in!");
+    }    
+}
+
+function hideMessage(){
+    $('#successCode').hide('slow');
+}
+</script>
+
+</body>
