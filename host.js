@@ -3,7 +3,7 @@ const request = require('request');
 const moment = require('moment');
 const { exec } = require('child_process');
 
-const rssFeed = 'https://nyaa.si/?page=rss'
+const rssFeed = 'https://nyaa.si/?page=rss&c=1_2'
 const matchTime = 22; //time in minutes, the time since the show was posted and when it should be concidered too old.
 const refresh = 10; //time in minutes, the time between checking cycles
 
@@ -20,9 +20,12 @@ setInterval(runCheck, refresh*60*1000); //run a new check every new refresh time
 
 async function runCheck(){
     await getRSS();
+    //console.log("finish rss");
     if(rss != null){ //if the rss feed is not there don't execute the other functions
         await getShows();
+        //console.log(`finish shows`);
         await getMagnetlink();
+        //console.log(`magnet`);
     }    
     console.log(getTimeStamp() + ".");
 }
@@ -86,7 +89,7 @@ function getShows(){ //readout your items list and store the data
         fs.readFile('items.txt','utf8',function(err,data){
             var arr = [];
             var dataArray = data.split(/\r?\n/);//split on newlines
-            dataArray.shift();//remove the first description entry from the array
+            //dataArray.shift();//remove the first description entry from the array
             for(var i=0; i<dataArray.length; i++){
                 arr.push([]);
                 arr[i] = dataArray[i].split(',');
@@ -101,8 +104,7 @@ function getMagnetlink(){  //first cycle through all the shows in the feed
     return new Promise((resolve,reject) => {
         for(var i = 0; i < rss.length; i++){
             //cycle through all the shows in the memory to see if one matches
-            for(var j = 0; j < loadedShows.length; j++){ 
-                
+            for(var j = 0; j <= loadedShows.length; j++){ 
                 var lowercaseTitle = rssShows[i][0].toLowerCase(); //convert the title to lowercase for case insensitive checking possibility
     
                 var matchTag = rssShows[i][0].indexOf(loadedShows[j][0]); //check for tag
