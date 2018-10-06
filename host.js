@@ -12,21 +12,23 @@ var rss;
 var rssShows = [];
 var logName;
 
-createLog(); //create log file
+//createLog(); //create log file
 
 runCheck(); //run the first check on startup
 
 setInterval(runCheck, refresh*60*1000); //run a new check every new refresh time
 
 async function runCheck(){
-    await getRSS();
+    /*await getRSS();
     //console.log("finish rss");
     if(rss != null){ //if the rss feed is not there don't execute the other functions
         await getShows();
         //console.log(`finish shows`);
         await getMagnetlink();
         //console.log(`magnet`);
-    }    
+    }
+    */
+    getRSS();    
     console.log(getTimeStamp() + ".");
 }
 
@@ -40,7 +42,7 @@ function createLog(){
 }
 
 function getRSS(){
-    return new Promise((resolve,reject) => {
+    //return new Promise((resolve,reject) => {
         rss = null;
         request(rssFeed, function (error, response, body) {
             if(error){
@@ -76,16 +78,17 @@ function getRSS(){
                     rssShows.push([]);
                     rssShows[i] = tArr;
                 }        
-                resolve();
+                //resolve();
+                getShows();
             }
         });     
         
-    });
+    //});
 }
     
 
 function getShows(){ //readout your items list and store the data
-    return new Promise((resolve,reject) => {
+    //return new Promise((resolve,reject) => {
         fs.readFile('items.txt','utf8',function(err,data){
             var arr = [];
             var dataArray = data.split(/\r?\n/);//split on newlines
@@ -95,16 +98,22 @@ function getShows(){ //readout your items list and store the data
                 arr[i] = dataArray[i].split(',');
             }
             loadedShows = arr;
-            resolve();
+            //resolve("2");
+            //console.log(loadedShows);
+            getMagnetlink();
         });
-    });    
+        //resolve("1");
+    //});    
 }
 
 function getMagnetlink(){  //first cycle through all the shows in the feed
-    return new Promise((resolve,reject) => {
+    //return new Promise((resolve,reject) => {
         for(var i = 0; i < rss.length; i++){
+            //console.log(rss.length + "." + i);
             //cycle through all the shows in the memory to see if one matches
-            for(var j = 0; j <= loadedShows.length; j++){ 
+            for(var j = 0; j < loadedShows.length; j++){ 
+                //console.log(loadedShows[j][0]);
+                //console.log(j);
                 var lowercaseTitle = rssShows[i][0].toLowerCase(); //convert the title to lowercase for case insensitive checking possibility
     
                 var matchTag = rssShows[i][0].indexOf(loadedShows[j][0]); //check for tag
@@ -125,6 +134,10 @@ function getMagnetlink(){  //first cycle through all the shows in the feed
                 //DEBUG: for more verbose output on decision making
                 if(matchName > -1){
                     console.log("Found: " + rssShows[i][0] + " other parameters(tqk): " + matchTag + matchQual + matchKeyword);
+                }
+                else
+                {
+                    //console.log(`${loadedShows[j][1]} not found` );
                 }
 
 
@@ -163,22 +176,23 @@ function getMagnetlink(){  //first cycle through all the shows in the feed
                           addTransmissionMagnetlink(magnetlink[1]);
                           //parse magnetlink to whatever torrent service you're using. Parsing magnetlink[1] gives you only the magnetlink string.
 
-                          resolve();
+                          //resolve();
                       });
                   }
                   else{
                       console.log('Episode not time valid.');
-                      resolve();
+                      //resolve();
                       
                   }
               }
               else
               {
-                  resolve();
+                  //resolve();
               }
             }
         }
-    });    
+        //resolve();
+    //});    
 }
 
 //see if episode is time valid for download
